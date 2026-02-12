@@ -2,7 +2,10 @@
 
 import numpy as np
 
-
+def arrhenius(A, Ea_eV, T_K):
+    kB_eV_per_K = 8.617333262e-5  # eV/K
+    return A * np.exp(-Ea_eV / (kB_eV_per_K * T_K))
+    
 def rates(theta, params):
     """
     Compute net rates for each elementary step.
@@ -21,14 +24,17 @@ def rates(theta, params):
     PO2 = params["PO2"]
     PCO2 = params["PCO2"]
 
-    k1f = params["k1f"]
-    k1r = params["k1r"]
-    k2f = params["k2f"]
-    k2r = params["k2r"]
-    k3f = params["k3f"]
-    k3r = params["k3r"]
-    k4f = params["k4f"]
-    k4r = params["k4r"]
+    A = params["A"]
+    T = params["T"]
+    
+    k1f = arrhenius(A, params["E1f"], T)
+    k1r = arrhenius(A, params["E1r"], T)
+    k2f = arrhenius(A, params["E2f"], T)
+    k2r = arrhenius(A, params["E2r"], T)
+    k3f = arrhenius(A, params["E3f"], T)
+    k3r = arrhenius(A, params["E3r"], T)
+    k4f = arrhenius(A, params["E4f"], T)
+    k4r = arrhenius(A, params["E4r"], T)
 
     # Step 1: CO adsorption
     r1f = k1f * PCO * theta_star
