@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from src.simulate import simulate_to_steady_state
