@@ -47,14 +47,17 @@ def main():
 	plt.close()
 
     # Optional diagnostic plot: coverages vs PCO (useful for interpretation)
-    plt.figure()
-    plt.plot(PCO_values, thetaCO_ss, label="θ_CO")
-    plt.plot(PCO_values, thetaO_ss, label="θ_O")
-    plt.plot(PCO_values, thetastar_ss, label="θ_*")
-    plt.xlabel("PCO")
-    plt.ylabel("Steady-state coverage")
-    plt.legend()
-    plt.tight_layout()
+	plt.figure()
+	plt.plot(PCO_values, thetaCO_ss, label="θ_CO")
+	plt.plot(PCO_values, thetaO_ss, label="θ_O")
+	plt.plot(PCO_values, thetastar_ss, label="θ_*")
+	plt.xlabel("PCO (dimensionless)")
+	plt.ylabel("Steady-state coverage")
+	plt.title("Surface Coverage vs CO Partial Pressure")
+	plt.legend()
+	plt.tight_layout()
+	plt.savefig("figures/coverage_vs_pco.png", dpi=300)
+	plt.close()
 
 
 if __name__ == "__main__":
