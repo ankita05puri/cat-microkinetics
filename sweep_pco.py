@@ -39,22 +39,25 @@ def main():
     # Figure 3: TOF vs PCO
     plt.figure()
     plt.plot(PCO_values, tofs, marker="o")
-    plt.xlabel("PCO")
+    plt.xlabel("PCO (dimensionless)")
     plt.ylabel("Steady-state TOF (net r4)")
+    plt.title("TOF vs CO Partial Pressure")
     plt.tight_layout()
-    plt.show()
+    plt.savefig("figures/tof_vs_pco.png", dpi=300)
+    plt.close()
 
     # Optional diagnostic plot: coverages vs PCO (useful for interpretation)
     plt.figure()
     plt.plot(PCO_values, thetaCO_ss, label="θ_CO")
     plt.plot(PCO_values, thetaO_ss, label="θ_O")
     plt.plot(PCO_values, thetastar_ss, label="θ_*")
-    plt.xlabel("PCO")
+    plt.xlabel("PCO (dimensionless)")
     plt.ylabel("Steady-state coverage")
+    plt.title("Surface Coverage vs CO Partial Pressure")
     plt.legend()
     plt.tight_layout()
-    plt.show()
-
+    plt.savefig("figures/coverage_vs_pco.png", dpi=300)
+    plt.close()
 
 if __name__ == "__main__":
     main()
