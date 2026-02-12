@@ -1,4 +1,8 @@
+import os
+os.environ["MPLBACKEND"] = "Agg"
+
 import numpy as np
+import matplotlib.pyplot as pltimport numpy as np
 import matplotlib.pyplot as plt
 plt.switch_backend("Agg")
 
