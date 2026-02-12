@@ -5,7 +5,6 @@ import numpy as np
 def arrhenius(A, Ea_eV, T_K):
     kB_eV_per_K = 8.617333262e-5  # eV/K
     return A * np.exp(-Ea_eV / (kB_eV_per_K * T_K))
-    
 def rates(theta, params):
     """
     Compute net rates for each elementary step.
@@ -26,7 +25,6 @@ def rates(theta, params):
 
     A = params["A"]
     T = params["T"]
-    
     k1f = arrhenius(A, params["E1f"], T)
     k1r = arrhenius(A, params["E1r"], T)
     k2f = arrhenius(A, params["E2f"], T)

@@ -44,4 +44,8 @@ def main():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     main()
+=======
+    main()
+>>>>>>> 8a970ea (Session 4: Arrhenius kinetics + sweeps)

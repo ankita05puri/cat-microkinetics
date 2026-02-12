@@ -9,15 +9,15 @@ def main():
         "PCO": 1.0,
         "PO2": 0.2,
         "PCO2": 0.0,
-    
+
         "T": 600.0,      # K
-        "A": 1e13,       # 1/s
-    
+        "A": 1e3,       # 1/s
+
         # Activation energies (eV) — toy values for now
-        "E1f": 0.20, "E1r": 0.60,   # CO adsorption/desorption
-        "E2f": 0.80, "E2r": 1.00,   # O2 dissociation/recombination
+        "E1f": 0.35, "E1r": 0.60,   # CO adsorption/desorption
+        "E2f": 0.55, "E2r": 1.00,   # O2 dissociation/recombination
         "E3f": 0.70, "E3r": 0.90,   # surface reaction
-        "E4f": 0.40, "E4r": 1.20,   # CO2 desorption/readsorption
+        "E4f": 0.70, "E4r": 1.20,   # CO2 desorption/readsorption
     }
     
 
