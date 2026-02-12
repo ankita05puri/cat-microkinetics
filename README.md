@@ -5,9 +5,9 @@ Overview
 
 This project implements a microkinetic model for heterogeneous CO oxidation on a catalytic surface.
 
-The goal is to connect elementary surface reaction steps to macroscopic catalytic performance (turnover frequency, TOF) under varying gas-phase conditions.
+The objective is to connect elementary surface reaction energetics to macroscopic catalytic performance (turnover frequency, TOF) under varying thermodynamic conditions.
 
-The model demonstrates how surface coverage dynamics govern activity and poisoning behavior.
+The framework demonstrates how surface coverage dynamics, site competition, and activation barriers collectively determine catalytic activity and poisoning behavior.
 
 ⸻
 
@@ -21,36 +21,53 @@ The following elementary steps are modeled:
 
 Where:
 	•	* represents an empty surface site
-	•	θ_CO, θ_O, θ_* represent surface coverages
+	•	θ_CO, θ_O, θ_CO2, and θ_* represent surface coverages
 
 ⸻
 
 Model Structure
-	•	Ordinary differential equations (ODEs) describe time evolution of surface coverages.
-	•	Steady-state is obtained via time integration.
-	•	Net catalytic rate is defined as the net rate of CO₂ formation (r₄).
-	•	A parameter sweep over CO partial pressure (PCO) is performed to evaluate performance.
+	•	Ordinary differential equations (ODEs) describe the time evolution of surface coverages.
+	•	Steady state is obtained via numerical integration.
+	•	Net catalytic rate (TOF) is defined as the steady-state net rate of CO₂ formation (r₄).
+	•	Parameter sweeps are performed over gas-phase conditions (PCO, temperature).
+
+⸻
+
+Session 4 — Temperature-Dependent Kinetics
+
+The model was extended from fixed rate constants to Arrhenius-based kinetics:
+
+k = A · exp(−Ea / kBT)
+
+Each elementary step now depends explicitly on activation energy and temperature.
+This connects microscopic barrier heights directly to macroscopic catalytic performance.
+
+Temperature sweeps reveal the exponential sensitivity of TOF to activation energies and highlight how competing elementary steps and surface coverage redistribution govern overall reactivity.
+
+The model now forms a physically grounded pipeline:
+
+energetics → rate constants → surface dynamics → steady-state performance
 
 ⸻
 
 Key Results
 
-1. Catalytic Performance Curve
+1. Catalytic Performance Curve (TOF vs PCO)
 
-TOF vs PCO shows three regimes:
-	•	Low PCO: surface mostly free → rate limited by CO adsorption
-	•	Intermediate PCO: optimal balance of CO* and O* → maximum activity
-	•	High PCO: surface saturated with CO* → oxygen adsorption suppressed → CO poisoning
+The TOF vs PCO sweep reveals three regimes:
+	•	Low PCO: Surface mostly free → rate limited by CO adsorption
+	•	Intermediate PCO: Balanced θ_CO and θ_O → maximum activity
+	•	High PCO: Surface saturated with CO* → oxygen adsorption suppressed → CO poisoning
 
-This behavior arises from site competition and surface coverage coupling.
+This non-linear behavior emerges from site competition and coverage coupling.
 
 ⸻
 
 2. Surface Coverage Analysis
 
-Coverage vs PCO reveals:
+Coverage vs PCO shows:
 	•	Increasing PCO increases θ_CO
-	•	θ_* decreases as CO occupies sites
+	•	θ_* decreases as CO occupies surface sites
 	•	Oxygen adsorption becomes suppressed at high CO pressure
 
-Catalytic performance is therefore controlled by surface availability, not just intrinsic rate constants.
+Catalytic performance is therefore governed by surface availability and kinetic competition, not solely intrinsic rate constants.
