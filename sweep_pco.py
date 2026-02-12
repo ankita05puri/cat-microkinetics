@@ -1,7 +1,6 @@
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.switch_backend("Agg")
 
 from src.simulate import simulate_to_steady_state
 from src.model import rates
