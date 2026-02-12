@@ -9,11 +9,17 @@ def main():
         "PCO": 1.0,
         "PO2": 0.2,
         "PCO2": 0.0,
-        "k1f": 5.0,  "k1r": 1.0,
-        "k2f": 2.0,  "k2r": 0.2,
-        "k3f": 1.0,  "k3r": 0.05,
-        "k4f": 3.0,  "k4r": 0.0,
+    
+        "T": 600.0,      # K
+        "A": 1e13,       # 1/s
+    
+        # Activation energies (eV) — toy values for now
+        "E1f": 0.20, "E1r": 0.60,   # CO adsorption/desorption
+        "E2f": 0.80, "E2r": 1.00,   # O2 dissociation/recombination
+        "E3f": 0.70, "E3r": 0.90,   # surface reaction
+        "E4f": 0.40, "E4r": 1.20,   # CO2 desorption/readsorption
     }
+    
 
     sol, theta_ss, theta_star_ss = simulate_to_steady_state(params)
 
