@@ -51,6 +51,7 @@ def main():
     
 
     # Optional diagnostic plot: coverages vs PCO (useful for interpretation)
+    plt.figure()
     plt.plot(PCO_values, thetaCO_ss, label="θ_CO")
     plt.plot(PCO_values, thetaO_ss, label="θ_O")
     plt.plot(PCO_values, thetastar_ss, label="θ_*")
