@@ -1,10 +1,5 @@
-import os
-os.environ["MPLBACKEND"] = "Agg"
-
 import numpy as np
-import matplotlib.pyplot as pltimport numpy as np
 import matplotlib.pyplot as plt
-plt.switch_backend("Agg")
 
 from src.simulate import simulate_to_steady_state
 from src.model import rates
@@ -42,29 +37,24 @@ def main():
         thetastar_ss.append(theta_star_ss)
 
     # Figure 3: TOF vs PCO
-    plt.figure()
-    plt.plot(PCO_values, tofs, marker="o")
-    plt.xlabel("PCO (dimensionless)")
-    plt.ylabel("Steady-state TOF (net r4)")
-    plt.title("TOF vs CO Partial Pressure")
-    plt.tight_layout()
-    plt.savefig("figures/tof_vs_pco.png", dpi=300)
-    plt.close()
-
-    
+	plt.figure()
+	plt.plot(PCO_values, tofs, marker="o")
+	plt.xlabel("PCO (dimensionless)")
+	plt.ylabel("Steady-state TOF (net r4)")
+	plt.title("TOF vs CO Partial Pressure")
+	plt.tight_layout()
+	plt.savefig("figures/tof_vs_pco.png", dpi=300)
+	plt.close()
 
     # Optional diagnostic plot: coverages vs PCO (useful for interpretation)
     plt.figure()
     plt.plot(PCO_values, thetaCO_ss, label="θ_CO")
     plt.plot(PCO_values, thetaO_ss, label="θ_O")
     plt.plot(PCO_values, thetastar_ss, label="θ_*")
-    plt.xlabel("PCO (dimensionless)")
+    plt.xlabel("PCO")
     plt.ylabel("Steady-state coverage")
-    plt.title("Surface Coverage vs CO Partial Pressure")
     plt.legend()
     plt.tight_layout()
-    plt.savefig("figures/coverage_vs_pco.png", dpi=300)
-    plt.close()
 
 
 if __name__ == "__main__":
