@@ -1,16 +1,26 @@
 cat-microkinetics
 
-CO oxidation microkinetic model linking surface energetics to catalytic performance.
+CO Oxidation Microkinetic Model: From Surface Energetics to Regime-Dependent Catalytic Performance
 
 ⸻
 
 Overview
 
-This project implements a microkinetic model for heterogeneous CO oxidation on a catalytic surface.
+This project implements a physics-based microkinetic model for heterogeneous CO oxidation on a catalytic surface.
 
-The objective is to connect elementary reaction energetics to macroscopic catalytic performance (turnover frequency, TOF) under varying thermodynamic conditions.
+The objective is to connect elementary reaction energetics to macroscopic catalytic performance (turnover frequency, TOF) under varying gas-phase conditions.
 
-The framework demonstrates how activation barriers, site competition, and surface coverage dynamics collectively determine catalytic activity and poisoning behavior.
+The framework demonstrates how:
+	•	Activation barriers
+	•	Surface site competition
+	•	Coverage redistribution
+	•	Operating conditions
+
+collectively determine catalytic activity, poisoning behavior, and apparent activation energy.
+
+This model establishes a complete computational pipeline:
+
+Barrier heights → Rate constants → Surface dynamics → Steady-state performance
 
 ⸻
 
@@ -24,83 +34,107 @@ The following elementary steps are modeled:
 
 Where:
 	•		•	represents an empty surface site
-	•	θ_CO, θ_O, θ_CO2, and θ_* represent fractional surface coverages
+	•	θ_CO, θ_O, θ_CO₂, θ_* represent surface coverages
+
+The model explicitly enforces site balance:
+\theta_{CO} + \theta_O + \theta_{CO2} + \theta_* = 1
 
 ⸻
 
-Model Structure
-	•	Ordinary differential equations (ODEs) describe the time evolution of surface coverages.
-	•	Steady state is obtained via numerical time integration.
+Mathematical Formulation
+	•	Surface coverages evolve according to ordinary differential equations (ODEs).
+	•	Steady state is obtained via numerical integration.
 	•	Net catalytic rate (TOF) is defined as the steady-state net rate of CO₂ formation (r₄).
-	•	Parameter sweeps are performed over gas-phase conditions (PCO, temperature).
 
-This creates a mechanistic pipeline from microscopic energetics to macroscopic observables:
+All rate constants follow Arrhenius form:
 
-activation barriers → rate constants → coverage redistribution → steady-state TOF
+k = A \exp\left(-\frac{E_a}{k_B T}\right)
 
-⸻
-
-Arrhenius Kinetics Extension
-
-The model was extended from fixed rate constants to Arrhenius-based kinetics:
-
-k = A \exp(-E_a / k_B T)
-
-Each elementary step now depends explicitly on activation energy and temperature.
-
-Temperature sweeps reveal exponential sensitivity of TOF to barrier heights and enable extraction of an apparent activation energy (Ea_app) from Arrhenius-style plots:
-
-\ln(\text{TOF}) \text{ vs } 1/T
+Each elementary step is therefore temperature-dependent and barrier-controlled.
 
 ⸻
 
-Apparent Activation Energy & Barrier Attribution
+Results
 
-Ea_app was obtained from linear fitting of ln(TOF) vs 1/T.
+1. Catalytic Performance vs CO Partial Pressure
 
-To determine which elementary barrier controls Ea_app, individual forward activation energies were perturbed by +0.05 eV (one at a time), and Ea_app was recomputed.
+The TOF vs PCO sweep reveals three kinetic regimes:
+	•	Low PCO: Surface largely free → oxygen chemistry active
+	•	Intermediate PCO: Balanced CO* and O* → maximum activity
+	•	High PCO: CO* saturation → O₂ adsorption suppressed → CO poisoning
 
-At baseline conditions:
-	•	Increasing E2f (O₂ dissociation) shifts Ea_app by ~0.05 eV
-	•	Increasing E3f (surface reaction) shifts Ea_app by ~0.10 eV
-	•	Increasing E4f (CO₂ desorption) shifts Ea_app by ~0.10 eV
-
-This demonstrates that Ea_app is an emergent system-level quantity rather than the largest single microscopic barrier.
-
-⸻
-Regime-Dependent Barrier Attribution
-
-Barrier sensitivity was evaluated under two CO partial pressure regimes:
-PCO	Ea_app (eV)	ΔE2f	ΔE3f	ΔE4f
-0.1	1.60	+0.069	+0.073	+0.086
-2.0	1.37	+0.050	+0.105	+0.105
-
-At low CO pressure, multiple barriers contribute comparably to Ea_app, indicating mixed kinetic control under oxygen-accessible conditions.
-
-At high CO pressure, sensitivity shifts toward the surface reaction and CO₂ desorption steps, while O₂ dissociation becomes less influential. This reflects CO-induced site blocking and redistribution of kinetic control.
-
-These results show that the dominant kinetic barrier is condition-dependent and emerges from coverage dynamics rather than intrinsic surface energetics alone.
+The volcano-like response arises purely from site competition and coverage coupling.
 
 ⸻
 
-Key Results
+2. Surface Coverage Redistribution
 
-1. Catalytic Performance Curve (TOF vs PCO)
-
-The TOF vs PCO sweep reveals three regimes:
-	•	Low PCO: Surface mostly free → rate limited by CO adsorption
-	•	Intermediate PCO: Balanced θ_CO and θ_O → maximum activity
-	•	High PCO: Surface saturated with CO* → oxygen adsorption suppressed → CO poisoning
-
-This nonlinear behavior emerges from site competition and coverage coupling.
-
-⸻
-
-2. Surface Coverage Analysis
-
-Coverage vs PCO shows:
+Coverage analysis shows:
 	•	Increasing PCO increases θ_CO
-	•	θ_* decreases as CO occupies surface sites
-	•	O₂ adsorption becomes suppressed at high CO pressure
+	•	θ_* decreases due to site occupation
+	•	O₂ adsorption becomes suppressed at high CO
 
-Catalytic performance is governed by surface availability and kinetic competition, not solely intrinsic rate constants.
+Catalytic performance is governed by surface availability, not only intrinsic rate constants.
+
+⸻
+
+3. Temperature Dependence and Apparent Activation Energy
+
+Temperature sweeps produce:
+	•	TOF vs T (exponential sensitivity)
+	•	Arrhenius-style plots: ln(TOF) vs 1/T
+	•	Extraction of apparent activation energy (Ea_app)
+
+Key insight:
+
+Ea_app is not equal to a single elementary barrier.
+It emerges from system-level flux control and surface redistribution.
+
+⸻
+
+4. Barrier Attribution via Perturbation
+
+To identify controlling barriers, each forward activation energy was perturbed by +0.05 eV and Ea_app was recomputed.
+
+Findings:
+	•	Surface reaction (E3f) and CO₂ desorption (E4f) strongly influence Ea_app
+	•	O₂ dissociation (E2f) influence depends on CO partial pressure
+	•	Dominant barrier changes across regimes
+
+This demonstrates:
+
+Apparent activation energy is regime-dependent and condition-sensitive.
+
+⸻
+
+5. Regime Map: Barrier Attribution vs PCO
+
+A 2D heatmap of ΔEa_app vs PCO reveals:
+	•	Low CO: O₂ dissociation contributes more strongly
+	•	High CO: Surface reaction and CO₂ desorption dominate
+	•	Ea_app decreases as surface becomes CO-poisoned
+
+This establishes a direct link between operating conditions and dominant kinetic barriers.
+
+⸻
+
+Technical Features
+	•	Fully Arrhenius-based microkinetic framework
+	•	ODE integration for surface dynamics
+	•	Parameter sweeps (PCO, T)
+	•	Apparent activation energy extraction
+	•	Degree-of-rate-control style perturbation analysis
+	•	Regime-dependent barrier attribution heatmap
+
+⸻
+
+Core Insight
+
+Catalytic performance is not determined by the largest intrinsic barrier alone.
+
+It is determined by:
+	•	Which steps control net flux
+	•	How surface coverages redistribute
+	•	How operating conditions reshape kinetic bottlenecks
+
+This project demonstrates how a microkinetic model transforms microscopic energetics into interpretable, regime-dependent catalytic behavior.
