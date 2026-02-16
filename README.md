@@ -24,7 +24,7 @@ The following elementary steps are modeled:
 
 Where:
 	•		•	represents an empty surface site
-	•	θ_CO, θ_O, θ_CO2, and θ_* represent surface coverages
+	•	θ_CO, θ_O, θ_CO2, and θ_* represent fractional surface coverages
 
 ⸻
 
@@ -34,7 +34,9 @@ Model Structure
 	•	Net catalytic rate (TOF) is defined as the steady-state net rate of CO₂ formation (r₄).
 	•	Parameter sweeps are performed over gas-phase conditions (PCO, temperature).
 
-This creates a full pipeline from microscopic kinetics to macroscopic observables.
+This creates a mechanistic pipeline from microscopic energetics to macroscopic observables:
+
+activation barriers → rate constants → coverage redistribution → steady-state TOF
 
 ⸻
 
@@ -46,11 +48,7 @@ k = A \exp(-E_a / k_B T)
 
 Each elementary step now depends explicitly on activation energy and temperature.
 
-This connects microscopic barrier heights directly to system-level catalytic performance:
-
-barrier height → rate constant → surface redistribution → steady-state TOF
-
-Temperature sweeps show the expected exponential increase in TOF and enable extraction of an apparent activation energy (Ea_app) from Arrhenius-style plots:
+Temperature sweeps reveal exponential sensitivity of TOF to barrier heights and enable extraction of an apparent activation energy (Ea_app) from Arrhenius-style plots:
 
 \ln(\text{TOF}) \text{ vs } 1/T
 
@@ -58,23 +56,30 @@ Temperature sweeps show the expected exponential increase in TOF and enable extr
 
 Apparent Activation Energy & Barrier Attribution
 
-The apparent activation energy (Ea_app) was obtained by linear fitting of ln(TOF) vs 1/T.
+Ea_app was obtained from linear fitting of ln(TOF) vs 1/T.
 
 To determine which elementary barrier controls Ea_app, individual forward activation energies were perturbed by +0.05 eV (one at a time), and Ea_app was recomputed.
 
-Results show:
-	•	Increasing E2f (O₂ dissociation) increases Ea_app by ~0.05 eV
-	•	Increasing E3f (surface reaction) increases Ea_app by ~0.10 eV
-	•	Increasing E4f (CO₂ desorption) increases Ea_app by ~0.10 eV
+At baseline conditions:
+	•	Increasing E2f (O₂ dissociation) shifts Ea_app by ~0.05 eV
+	•	Increasing E3f (surface reaction) shifts Ea_app by ~0.10 eV
+	•	Increasing E4f (CO₂ desorption) shifts Ea_app by ~0.10 eV
 
-This demonstrates that Ea_app is a system-level quantity, not simply the largest single barrier.
+This demonstrates that Ea_app is an emergent system-level quantity rather than the largest single microscopic barrier.
 
-Its magnitude depends on:
-	•	Which steps control net flux
-	•	Surface coverage distribution
-	•	Operating regime (temperature and partial pressures)
+⸻
+Regime-Dependent Barrier Attribution
 
-In this baseline condition, surface reaction and CO₂ desorption contribute more strongly to temperature sensitivity than O₂ dissociation.
+Barrier sensitivity was evaluated under two CO partial pressure regimes:
+PCO	Ea_app (eV)	ΔE2f	ΔE3f	ΔE4f
+0.1	1.60	+0.069	+0.073	+0.086
+2.0	1.37	+0.050	+0.105	+0.105
+
+At low CO pressure, multiple barriers contribute comparably to Ea_app, indicating mixed kinetic control under oxygen-accessible conditions.
+
+At high CO pressure, sensitivity shifts toward the surface reaction and CO₂ desorption steps, while O₂ dissociation becomes less influential. This reflects CO-induced site blocking and redistribution of kinetic control.
+
+These results show that the dominant kinetic barrier is condition-dependent and emerges from coverage dynamics rather than intrinsic surface energetics alone.
 
 ⸻
 
@@ -98,4 +103,4 @@ Coverage vs PCO shows:
 	•	θ_* decreases as CO occupies surface sites
 	•	O₂ adsorption becomes suppressed at high CO pressure
 
-Catalytic performance is therefore governed by surface availability and kinetic competition, not solely intrinsic rate constants.
+Catalytic performance is governed by surface availability and kinetic competition, not solely intrinsic rate constants.
