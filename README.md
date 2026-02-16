@@ -37,7 +37,7 @@ Where:
 	•	θ_CO, θ_O, θ_CO₂, θ_* represent surface coverages
 
 The model explicitly enforces site balance:
-\theta_{CO} + \theta_O + \theta_{CO2} + \theta_* = 1
+θ_CO + θ_O + θ_CO₂ + θ_* = 1
 
 ⸻
 
@@ -48,7 +48,7 @@ Mathematical Formulation
 
 All rate constants follow Arrhenius form:
 
-k = A \exp\left(-\frac{E_a}{k_B T}\right)
+k = A · exp(−Ea / (kB T))
 
 Each elementary step is therefore temperature-dependent and barrier-controlled.
 
