@@ -1,26 +1,20 @@
-cat-microkinetics
+CO Oxidation Microkinetic Modeling Framework
 
-CO Oxidation Microkinetic Model: From Surface Energetics to Regime-Dependent Catalytic Performance
+From Periodic DFT Energetics to Regime-Dependent Catalytic Performance
 
 ⸻
 
 Overview
 
-This project implements a physics-based microkinetic model for heterogeneous CO oxidation on a catalytic surface.
+This repository implements a physics-based microkinetic modeling framework for heterogeneous CO oxidation on Pt(111).
 
-The objective is to connect elementary reaction energetics to macroscopic catalytic performance (turnover frequency, TOF) under varying gas-phase conditions.
+The objective is to translate periodic DFT-derived adsorption energies and activation barriers into macroscopic catalytic performance metrics under varying temperature and gas-phase conditions.
 
-The framework demonstrates how:
-	•	Activation barriers
-	•	Surface site competition
-	•	Coverage redistribution
-	•	Operating conditions
+The framework connects:
 
-collectively determine catalytic activity, poisoning behavior, and apparent activation energy.
+DFT Energetics → Arrhenius Rate Constants → Surface Coverage Dynamics → Steady-State Flux → Catalyst Performance Maps
 
-This model establishes a complete computational pipeline:
-
-Barrier heights → Rate constants → Surface dynamics → Steady-state performance
+It demonstrates how surface competition, kinetic coupling, and operating conditions collectively determine turnover frequency and apparent activation behavior.
 
 ⸻
 
@@ -32,109 +26,113 @@ The following elementary steps are modeled:
 	3.	CO* + O* ⇌ CO₂*
 	4.	CO₂* ⇌ CO₂(g) + *
 
-Where:
-	•		•	represents an empty surface site
-	•	θ_CO, θ_O, θ_CO₂, θ_* represent surface coverages
+Where * denotes an empty surface site.
 
-The model explicitly enforces site balance:
+Surface site balance is explicitly enforced:
+
 θ_CO + θ_O + θ_CO₂ + θ_* = 1
 
-⸻
-
-Mathematical Formulation
-	•	Surface coverages evolve according to ordinary differential equations (ODEs).
-	•	Steady state is obtained via numerical integration.
-	•	Net catalytic rate (TOF) is defined as the steady-state net rate of CO₂ formation (r₄).
-
-All rate constants follow Arrhenius form:
+All forward and reverse rate constants follow Arrhenius form:
 
 k = A · exp(−Ea / (kB T))
 
-Each elementary step is therefore temperature-dependent and barrier-controlled.
+⸻
+
+Mathematical Framework
+	•	Mean-field microkinetic model
+	•	ODE-based surface coverage evolution
+	•	Numerical integration to steady state
+	•	Turnover frequency (TOF) defined as steady-state net CO₂ formation rate
+
+Temperature sweeps enable extraction of apparent activation energy (Ea_app) from Arrhenius-style ln(TOF) vs 1/T analysis.
 
 ⸻
 
-Results
+Key Results
 
-1. Catalytic Performance vs CO Partial Pressure
+1. Regime-Dependent Catalytic Performance
 
-The TOF vs PCO sweep reveals three kinetic regimes:
-	•	Low PCO: Surface largely free → oxygen chemistry active
-	•	Intermediate PCO: Balanced CO* and O* → maximum activity
-	•	High PCO: CO* saturation → O₂ adsorption suppressed → CO poisoning
+TOF vs P_CO reveals three distinct kinetic regimes:
+	•	Oxygen-activated regime (low CO partial pressure)
+	•	Balanced surface regime (maximum catalytic activity)
+	•	CO-poisoned regime (high CO partial pressure)
 
-The volcano-like response arises purely from site competition and coverage coupling.
+Volcano-like activity emerges from surface site competition and coverage redistribution, not from a single dominant barrier.
 
 ⸻
 
 2. Surface Coverage Redistribution
 
-Coverage analysis shows:
-	•	Increasing PCO increases θ_CO
-	•	θ_* decreases due to site occupation
-	•	O₂ adsorption becomes suppressed at high CO
+Increasing CO partial pressure shifts surface occupation:
+	•	θ_CO increases
+	•	θ_* decreases
+	•	O₂ adsorption becomes suppressed
 
-Catalytic performance is governed by surface availability, not only intrinsic rate constants.
-
-⸻
-
-3. Temperature Dependence and Apparent Activation Energy
-
-Temperature sweeps produce:
-	•	TOF vs T (exponential sensitivity)
-	•	Arrhenius-style plots: ln(TOF) vs 1/T
-	•	Extraction of apparent activation energy (Ea_app)
-
-Key insight:
-
-Ea_app is not equal to a single elementary barrier.
-It emerges from system-level flux control and surface redistribution.
+Catalytic performance is governed by surface availability and flux coupling, not intrinsic rate constants alone.
 
 ⸻
 
-4. Barrier Attribution via Perturbation
+3. Apparent Activation Energy Emergence
 
-To identify controlling barriers, each forward activation energy was perturbed by +0.05 eV and Ea_app was recomputed.
+Apparent activation energy is not equal to any single elementary barrier.
+
+It emerges from system-level flux redistribution and shifts in surface coverage across operating conditions.
+
+⸻
+
+4. Barrier Sensitivity Analysis
+
+Forward activation energies were perturbed (+0.05 eV) to quantify regime-dependent flux control.
 
 Findings:
-	•	Surface reaction (E3f) and CO₂ desorption (E4f) strongly influence Ea_app
-	•	O₂ dissociation (E2f) influence depends on CO partial pressure
-	•	Dominant barrier changes across regimes
+	•	Surface reaction and CO₂ desorption dominate in CO-rich regimes
+	•	O₂ dissociation dominates in oxygen-rich regimes
+	•	The kinetically controlling barrier shifts across state space
 
-This demonstrates:
-
-Apparent activation energy is regime-dependent and condition-sensitive.
+This demonstrates condition-dependent migration of rate control.
 
 ⸻
 
-5. Regime Map: Barrier Attribution vs PCO
-
-A 2D heatmap of ΔEa_app vs PCO reveals:
-	•	Low CO: O₂ dissociation contributes more strongly
-	•	High CO: Surface reaction and CO₂ desorption dominate
-	•	Ea_app decreases as surface becomes CO-poisoned
-
-This establishes a direct link between operating conditions and dominant kinetic barriers.
-
-⸻
-
-Technical Features
-	•	Fully Arrhenius-based microkinetic framework
+Technical Implementation
+	•	Python-based microkinetic solver
+	•	Arrhenius-based rate constant construction
 	•	ODE integration for surface dynamics
-	•	Parameter sweeps (PCO, T)
+	•	Parameter sweeps across temperature and P_CO
 	•	Apparent activation energy extraction
-	•	Degree-of-rate-control style perturbation analysis
-	•	Regime-dependent barrier attribution heatmap
+	•	Barrier perturbation analysis
+	•	Regime heatmap visualization
+
+The architecture is modular and designed for integration with periodic DFT workflows and data-driven parameterization.
+
+⸻
+
+Model Assumptions
+	•	Mean-field approximation (no lateral interactions)
+	•	Single active site type
+	•	No coverage-dependent activation barriers
+	•	No transport limitations
+	•	Uniform surface
+
+These assumptions maintain interpretability while allowing extension toward more complex models.
+
+⸻
+
+Reproducibility
+	• Run baseline simulation: python run_baseline.py
+	• Sweep CO partial pressure: python sweep_pco.py
+	• Generate regime heatmap: python sweep_heatmap.py
 
 ⸻
 
 Core Insight
 
-Catalytic performance is not determined by the largest intrinsic barrier alone.
+Catalytic performance is not determined by the largest intrinsic barrier.
 
 It is determined by:
 	•	Which steps control net flux
 	•	How surface coverages redistribute
 	•	How operating conditions reshape kinetic bottlenecks
 
-This project demonstrates how a microkinetic model transforms microscopic energetics into interpretable, regime-dependent catalytic behavior.
+This framework demonstrates how electronic structure energetics can be transformed into predictive, regime-dependent catalytic performance maps.
+
+
