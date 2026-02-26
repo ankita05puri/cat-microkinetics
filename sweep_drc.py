@@ -6,20 +6,22 @@ from src.simulate import simulate_to_steady_state
 from src.model import rates
 
 
-def compute_tof(params):
-    sol, theta_ss, theta_star_ss = simulate_to_steady_state(params, t_final=80.0)
-    r1, r2, r3, r4 = rates(theta_ss, params)
-    tof = r4
-    return tof
+K_B_EV_PER_K = 8.617333262e-5  # eV/K
+
+
+def compute_tof(params, t_final=80.0):
+    """Return steady-state TOF = net r4."""
+    _, theta_ss, _ = simulate_to_steady_state(params, t_final=t_final)
+    _, _, _, r4 = rates(theta_ss, params)
+    return float(r4)
 
 
 def main():
-    # Baseline parameters (use SAME as run_baseline.py)
+    # Baseline parameters (keep aligned with run_baseline.py)
     base_params = {
         "PCO": 1.0,
         "PO2": 0.2,
         "PCO2": 0.0,
-
         "T": 600.0,
         "A": 1e3,
 
@@ -29,17 +31,8 @@ def main():
         "E4f": 0.70, "E4r": 1.20,
     }
 
-    # Finite difference perturbation
-    delta_E = 0.01  # eV
-
-    # kB in eV/K (same system as your Arrhenius)
-    kB = 8.617333262e-5
-
-    tof_base = compute_tof(base_params)
-    if tof_base <= 0:
-        raise ValueError(f"Baseline TOF must be > 0 for log; got {tof_base}")
-
-    ln_tof_base = np.log(tof_base)
+    T = float(base_params["T"])
+    delta_E = 0.01  # eV (small perturbation)
 
     steps = ["E1f", "E2f", "E3f", "E4f"]
     labels = {
@@ -49,45 +42,44 @@ def main():
         "E4f": "CO2 desorption",
     }
 
-    drc_vals = {}
+    tof0 = compute_tof(base_params)
+    if tof0 <= 0:
+        raise ValueError(f"Baseline TOF must be > 0 for log(). Got {tof0}")
 
-    for step in steps:
-        params_new = copy.deepcopy(base_params)
-        params_new[step] = params_new[step] - delta_E  # lower barrier slightly
+    ln_tof0 = np.log(tof0)
 
-        tof_new = compute_tof(params_new)
-        if tof_new <= 0:
-            raise ValueError(f"Perturbed TOF must be > 0 for log; {step} gave {tof_new}")
+    drc = {}
 
-        ln_tof_new = np.log(tof_new)
+    for key in steps:
+        p = copy.deepcopy(base_params)
+        p[key] = p[key] - delta_E  # lower barrier slightly
 
-        # DRC_i ≈ (d ln TOF) / ( - dEa / (kB*T) )
-        drc = (ln_tof_new - ln_tof_base) / (delta_E / (kB * base_params["T"]))
+        tof1 = compute_tof(p)
+        if tof1 <= 0:
+            raise ValueError(f"Perturbed TOF must be > 0 for log(). {key} gave {tof1}")
 
-        drc_vals[labels[step]] = drc
+        ln_tof1 = np.log(tof1)
 
-    # Print results
-    print("Baseline TOF:", tof_base)
-    print("DRC results:")
-    for k, v in drc_vals.items():
-        print(f"  {k:15s}: {v: .3f}")
+        # DRC_i ≈ (d ln TOF) / (d( -Ea/(kB*T) ))
+        # Lowering Ea by delta_E increases (-Ea/(kB*T)) by +delta_E/(kB*T)
+        denom = delta_E / (K_B_EV_PER_K * T)
+        drc_val = (ln_tof1 - ln_tof0) / denom
 
-    # Plot bar chart
-    names = list(drc_vals.keys())
-    values = [drc_vals[n] for n in names]
+        drc[labels[key]] = float(drc_val)
+
+    # Print
+    print(f"Baseline TOF: {tof0:.6e}")
+    print("Degree of Rate Control (DRC):")
+    for name, val in drc.items():
+        print(f"  {name:15s}: {val:+.3f}")
+
+    # Plot
+    names = list(drc.keys())
+    values = [drc[n] for n in names]
 
     plt.figure()
     plt.bar(names, values)
     plt.axhline(0.0)
     plt.ylabel("Degree of Rate Control (DRC)")
-    plt.title("Degree of Rate Control at Baseline Conditions")
-    plt.xticks(rotation=20, ha="right")
-    plt.tight_layout()
-    plt.savefig("figures/drc_barplot.png", dpi=300)
-    plt.close()
-
-    print("Saved: figures/drc_barplot.png")
-
-
-if __name__ == "__main__":
-    main()
+    plt.title("DRC at Baseline Conditions")
+    plt.xticks(rotation=20
