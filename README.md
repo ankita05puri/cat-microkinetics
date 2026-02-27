@@ -1,6 +1,6 @@
-CO Oxidation Microkinetic & Surrogate Modeling Framework
+CO Oxidation Microkinetics & Surrogate Modeling
 
-From Periodic DFT Energetics to Regime-Dependent Catalytic Performance
+DFT-to-Performance Framework with Regime and Generalization Analysis
 
 ⸻
 
